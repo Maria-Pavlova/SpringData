@@ -1,14 +1,12 @@
 package com.example.bookshopsystem.models.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "authors")
+@Entity
+@Table(name = "authors")
 public class Author extends BaseEntity{
 
     @Column(name = "first_name")
@@ -51,5 +49,9 @@ public class Author extends BaseEntity{
 
     public void setBooks(Set<Book> books) {
         this.books = books;
+    }
+
+    public void addBook(Book book){
+        this.books.add(book);
     }
 }

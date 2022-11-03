@@ -1,6 +1,7 @@
 package com.example.usersystem.models;
 
-import com.example.usersystem.validation.Password;
+import com.example.usersystem.validation.ValidPassword;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
@@ -12,21 +13,37 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Entity(name = "users")
-public class User extends BaseEntity{
+@Entity
+@Table(name = "users")
+public class User extends BaseEntity {
 
     @Column(name = "user_name", nullable = false)
     @Size(min = 4, max = 30)
     private String username;
 
-    @OneToOne
-    private UserName userName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @Transient
+    private String fullName;
+
+    //  @ValidPassword(message = "Invalid password")
+
+    @Password(minLength = 6,
+            maxLength = 50,
+            containsDigit = true,
+            containsLowerCase = true,
+            containsUpperCase = true,
+            containsSpecial = true
+            )
 
     @NotNull
-    @Password
     private String password;
 
-    @Email(regexp = "")
+    @Email(message = "Invalid email")
     private String email;
 
     @Column(name = "registered_on", nullable = false)
@@ -41,7 +58,7 @@ public class User extends BaseEntity{
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
-    @ManyToMany(targetEntity = User.class)
+    @ManyToMany
     private Set<User> friends;
 
     @ManyToOne
@@ -60,31 +77,41 @@ public class User extends BaseEntity{
     public User() {
     }
 
-    public User(String username,UserName userName, String password, String email,
-                LocalDateTime registeredOn, LocalDateTime lastTimeLoggedIn, int age,
-                boolean isDeleted, Set<User> friends, Town bornTown, Town currentlyLivingIn,
-                Picture picture, Set<Album> albums) {
+    public User(String username, String firstName, String lastName, String password, String email, LocalDateTime registeredOn, LocalDateTime lastTimeLoggedIn, int age, boolean isDeleted) {
         this.username = username;
-        this.userName = userName;
-        this.setPassword(password);
-        this.setEmail(email);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
         this.registeredOn = registeredOn;
         this.lastTimeLoggedIn = lastTimeLoggedIn;
         this.age = age;
-        this.isDeleted = isDeleted;
-        this.friends = friends;
-        this.bornTown = bornTown;
-        this.currentlyLivingIn = currentlyLivingIn;
-        this.picture = picture;
-        this.albums = albums;
+        this.isDeleted = false;
     }
 
-    public UserName getUserName() {
-        return userName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setUserName(UserName userName) {
-        this.userName = userName;
+    public void setFullName(String fullName) {
+        this.fullName = this.firstName + " " + this.lastName;
+
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPassword() {
@@ -100,8 +127,8 @@ public class User extends BaseEntity{
     }
 
     public String setEmail(String email) {
-        if (!isValidEmail(email)){
-           throw new ValidationException("Invalid email!");
+        if (!isValidEmail(email)) {
+            throw new ValidationException("Invalid email!");
         }
         this.email = email;
         return email;
@@ -187,10 +214,11 @@ public class User extends BaseEntity{
         this.username = username;
     }
 
-    public static boolean isValidEmail(String enteredEmail){
+    public static boolean isValidEmail(String enteredEmail) {
         String EMAIL_REGEX = "^([a-zA-Z0-9]+[_\\-\\.]*[a-zA-Z0-9]+)@([a-zA-Z0-9]+[\\-]*[a-zA-Z0-9]+\\.[a-z]+\\.*[a-z]*)$";
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(enteredEmail);
-        return ((!enteredEmail.isEmpty()) && (enteredEmail!=null) && (matcher.matches()));
+        return ((!enteredEmail.isEmpty()) && (enteredEmail != null) && (matcher.matches()));
     }
+
 }

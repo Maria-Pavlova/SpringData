@@ -1,9 +1,9 @@
 package com.example.bookshopsystem;
-
 import com.example.bookshopsystem.models.entities.Book;
 import com.example.bookshopsystem.services.AuthorService;
 import com.example.bookshopsystem.services.BookService;
 import com.example.bookshopsystem.services.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     private final AuthorService authorService;
     private final BookService bookService;
 
+    @Autowired
     public CommandLineRunnerImpl(CategoryService categoryService, AuthorService authorService, BookService bookService) {
         this.categoryService = categoryService;
         this.authorService = authorService;
@@ -26,38 +27,18 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 //        seedData();
-//
-//        printAllBooksAfterYear(2000);
-//
-//        printAllAuthorsNamesWithBooksWithReleaseDateBeforeYear(1990);
-//
-//        printAllAuthorsAndNumberOfTheirBooks();
 
-        printAllBooksByAuthorNameOrderByReleaseDate("George", "Powell");
+        // 01.
+//        bookService.findAllBooksAfterYear(2000);
 
-    }
+        // 02.
+//        bookService.findFindAllBooksWithReleaseDateBeforeYear(1990);
 
-    private void printAllBooksByAuthorNameOrderByReleaseDate(String firstName, String lastName) {
-        bookService
-                .findAllBooksByAuthorFirstAndLastNameOrderByReleaseDate(firstName, lastName)
-                .forEach(System.out::println);
-    }
+        // 03.
+//        authorService.getAllAuthorsOrderByCountOfBooks();
 
-    private void printAllAuthorsAndNumberOfTheirBooks() {
-        authorService.getAllAuthorsOrderByCountOfBooks()
-                .forEach(System.out::println);
-    }
-
-    private void printAllAuthorsNamesWithBooksWithReleaseDateBeforeYear(int year) {
-        bookService.findFindAllBooksWithReleaseDateBeforeYear(year)
-                .forEach(System.out::println);
-    }
-
-    private void printAllBooksAfterYear(int year) {
-        bookService.findAllBooksAfterYear(year)
-                .stream()
-                .map(Book::getTitle)
-                .forEach(System.out::println);
+        // 04.
+//        bookService.findAllBooksByAuthorFirstAndLastNameOrderByReleaseDate("George", "Powell");
     }
 
     private void seedData() throws IOException {

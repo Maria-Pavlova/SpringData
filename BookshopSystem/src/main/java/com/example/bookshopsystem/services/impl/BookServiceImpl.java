@@ -6,7 +6,6 @@ import com.example.bookshopsystem.services.AuthorService;
 import com.example.bookshopsystem.services.BookService;
 import com.example.bookshopsystem.services.CategoryService;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -14,7 +13,6 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,39 +41,45 @@ public class BookServiceImpl implements BookService {
                 .forEach(line -> {
                     String[] bookInfo = line.split("\\s+");
 
-                    Book book = createBookFromInfo(bookInfo);
-                    bookRepository.save(book);
+                    Book book = createBook(bookInfo);
+                    this.bookRepository.save(book);
                 });
     }
 
     @Override
-    public List<Book> findAllBooksAfterYear(int year) {
-        return bookRepository.findAllByReleaseDateAfter(LocalDate.of(year, 12, 31));
+    public void findAllBooksAfterYear(int year) {
+        this.bookRepository.findAllByReleaseDateAfter(LocalDate.of(year, 12, 31))
+                .stream()
+                .map(Book::getTitle)
+                .forEach(System.out::println);
 
     }
 
     @Override
-    public List<String> findFindAllBooksWithReleaseDateBeforeYear(int year) {
-        return bookRepository.findAllByReleaseDateBefore(LocalDate.of(year, 1, 1))
+    public void findFindAllBooksWithReleaseDateBeforeYear(int year) {
+        this.bookRepository.findAllByReleaseDateBefore(LocalDate.of(year, 1, 1))
                 .stream()
                 .map(book -> String.format("%s %s", book.getAuthor().getFirstName(),
                         book.getAuthor().getLastName()))
                 .distinct()
-                .collect(Collectors.toList());
+                .toList()
+                .forEach(System.out::println);
 
     }
 
     @Override
-    public List<String> findAllBooksByAuthorFirstAndLastNameOrderByReleaseDate(String firstName, String lastName) {
-        return bookRepository
+    public void findAllBooksByAuthorFirstAndLastNameOrderByReleaseDate(String firstName, String lastName) {
+        this.bookRepository
                 .findAllByAuthor_FirstNameAndAuthor_LastNameOrderByReleaseDateDescTitle(firstName, lastName)
                 .stream()
                 .map(book -> String.format("%s %s %d",
                         book.getTitle(), book.getReleaseDate(), book.getCopies()))
-                .collect(Collectors.toList());
+                .toList()
+                .forEach(System.out::println);
     }
 
-    private Book createBookFromInfo(String[] bookInfo) {
+
+    private Book createBook(String[] bookInfo) {
         EditionType editionType = EditionType.values()[Integer.parseInt(bookInfo[0])];
         LocalDate releaseDate = LocalDate.parse(bookInfo[1], DateTimeFormatter.ofPattern("d/M/yyyy"));
         Integer copies = Integer.parseInt(bookInfo[2]);

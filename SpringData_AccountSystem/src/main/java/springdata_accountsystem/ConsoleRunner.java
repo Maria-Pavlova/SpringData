@@ -25,6 +25,10 @@ public class ConsoleRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        this.userService.registerUser("First", 25);
+
+
 //        User user1 = new User("Ani", 25);
 //        userService.registerUser(user1);
 //
@@ -42,8 +46,8 @@ public class ConsoleRunner implements CommandLineRunner {
 //        } catch (InsufficientFoundException e) {
 //            e.printStackTrace();
 //        }
+        
 
-
-        this.accountService.transferBetweenAccounts(2L, 1L, new BigDecimal(150));
+      //  this.accountService.transferBetweenAccounts(2L, 1L, new BigDecimal(150));
     }
 }

@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CategoryServiceImpl implements CategoryService {
 
     private static final String CATEGORIES_FILE_PATH = "src/main/resources/files/categories.txt";
-
     private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -29,13 +28,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRepository.count() > 0){
             return;
         }
-
         Files.readAllLines(Path.of(CATEGORIES_FILE_PATH))
                 .stream()
                 .filter(line -> !line.isEmpty())
                 .forEach(name -> {
                     Category category = new Category(name);
-
                     categoryRepository.save(category);
                 });
     }

@@ -2,38 +2,37 @@
 import entities.Employee;
 import entities.Project;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Main08_EmployeeWithProject {
+    private static final String DATABASE_NAME = "soft_uni";
+    private static final String GET_EMPLOYEE_BY_ID = "SELECT e FROM Employee e WHERE e.id = : employee_id";
+
     public static void main(String[] args) {
 
 
-        EntityManagerFactory f = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = f.createEntityManager();
-        entityManager.getTransaction().begin();
+        EntityManager entityManager = Persistence.createEntityManagerFactory(DATABASE_NAME)
+                .createEntityManager();
 
-        Scanner scanner = new Scanner(System.in);
-        int input = Integer.parseInt(scanner.nextLine());
+        int input = new Scanner(System.in).nextInt();
 
-        Employee employee = entityManager.createQuery("SELECT e FROM Employee e " +
-                        "WHERE e.id = : employee_id", Employee.class)
+        Employee employee = entityManager.createQuery(GET_EMPLOYEE_BY_ID, Employee.class)
                 .setParameter("employee_id", input)
                 .getSingleResult();
 
-        List<String> projectName = new ArrayList<>();
-        Set<Project> projects = employee.getProjects();
-        for (Project project : projects) {
-            projectName.add(project.getName());
-        }
-        Collections.sort(projectName);
+        System.out.printf("%s %s - %s%n\t%s",
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getJobTitle(),
+                employee.getProjects()
+                        .stream()
+                        .sorted(Comparator.comparing(Project::getName))
+                        .map(Project::getName)
+                        .collect(Collectors.joining("\n\t")));
 
-        System.out.printf("%s %s - %s%n", employee.getFirstName(), employee.getLastName(), employee.getJobTitle());
-        projectName.forEach(System.out::println);
-
-        entityManager.getTransaction().commit();
         entityManager.close();
     }
 }

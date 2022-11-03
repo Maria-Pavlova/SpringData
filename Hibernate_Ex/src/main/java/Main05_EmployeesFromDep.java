@@ -1,30 +1,25 @@
 import entities.Employee;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class Main05_EmployeesFromDep {
+    private static final String PRINT_FORMAT = "%s %s from %s - $%.2f%n";
+    private static final String GET_EMPLOYEE_BY_DEPARTMENT = "SELECT e FROM Employee e " +
+                                                            "WHERE e.department.name = :name " +
+                                                            "ORDER BY e.salary ASC, e.id ASC";
     public static void main(String[] args) {
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = factory.createEntityManager();
-        entityManager.getTransaction().begin();
+        EntityManager entityManager = Persistence.createEntityManagerFactory("soft_uni")
+                .createEntityManager();
 
         String department = "Research and Development";
         entityManager
-                .createQuery("SELECT e FROM Employee e " +
-                        "WHERE e.department.name = :name " +
-                        "ORDER BY e.salary ASC, e.id ASC", Employee.class)
+                .createQuery(GET_EMPLOYEE_BY_DEPARTMENT, Employee.class)
                 .setParameter("name", department)
                 .getResultStream()
-                .forEach(e -> {
-                    String format = String.format("%s %s from %s - $%.2f",
-                            e.getFirstName(), e.getLastName(), department, e.getSalary());
-                    System.out.println(format);
-                });
+                .forEach(e -> System.out.printf(PRINT_FORMAT,
+                            e.getFirstName(), e.getLastName(), e.getDepartment().getName(), e.getSalary()));
 
-        entityManager.getTransaction().commit();
         entityManager.close();
 
     }

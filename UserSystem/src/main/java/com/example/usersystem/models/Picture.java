@@ -16,7 +16,7 @@ public class Picture extends BaseEntity {
     @Column(nullable = false)
     private String path;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "pictures")
     private Set<Album> albums;
 
 

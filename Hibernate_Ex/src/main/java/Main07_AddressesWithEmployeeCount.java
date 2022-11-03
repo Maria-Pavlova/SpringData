@@ -1,23 +1,22 @@
 import entities.Address;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class Main07_AddressesWithEmployeeCount {
+    private static final String DATABASE_NAME = "soft_uni";
+    private static final String GET_ADDRESS_WITH_EMPLOYEE_COUNT = "SELECT a FROM Address a ORDER BY a.employees.size DESC";
+
     public static void main(String[] args) {
 
-        EntityManagerFactory f = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = f.createEntityManager();
-        entityManager.getTransaction().begin();
+        EntityManager entityManager = Persistence.createEntityManagerFactory(DATABASE_NAME)
+                .createEntityManager();
 
-        entityManager.createQuery("SELECT a FROM Address a " +
-                "ORDER BY a.employees.size DESC", Address.class)
+        entityManager.createQuery(GET_ADDRESS_WITH_EMPLOYEE_COUNT, Address.class)
                 .setMaxResults(10)
-                .getResultStream()
+                .getResultList()
                 .forEach(System.out::println);
 
-        entityManager.getTransaction().commit();
         entityManager.close();
     }
 }

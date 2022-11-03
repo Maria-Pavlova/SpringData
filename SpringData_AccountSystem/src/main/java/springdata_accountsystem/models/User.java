@@ -16,19 +16,21 @@ public class User {
 
     private  int age;
 
-    @OneToMany(targetEntity = Account.class, mappedBy = "user")
+    @OneToMany(targetEntity = Account.class, mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Account> accounts;
 
-    public User(String username, int age) {
-        this.username = username;
-        this.age = age;
-        this.accounts = new HashSet<>();
-    }
 
     public User() {
         this.accounts = new HashSet<>();
     }
 
+    public User(String username, int age, Account account) {
+        this();
+        this.username = username;
+        this.age = age;
+        this.accounts.add(account);
+
+    }
 
     public long getId() {
         return id;
@@ -58,6 +60,13 @@ public class User {
         return Collections.unmodifiableSet(accounts);
     }
 
+    public void addAccount(Account account){
+        this.accounts.add(account);
+    }
+
+    public void removeAccount(Account account){
+        this.accounts.remove(account);
+    }
     public void setAccounts(Set<Account> accounts) {
         this.accounts = accounts;
     }

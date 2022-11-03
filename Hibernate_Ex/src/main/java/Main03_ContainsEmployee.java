@@ -4,21 +4,18 @@ import javax.persistence.*;
 import java.util.Scanner;
 
 public class Main03_ContainsEmployee {
+    private static final String DATABASE_NAME = "soft_uni";
+    private static final String GET_EMPLOYEE_COUNT = "SELECT COUNT(e) FROM Employee e" +
+                                                  " WHERE e.firstName = : first_name " +
+                                                   "AND e.lastName = :last_name";
     public static void main(String[] args) {
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = factory.createEntityManager();
-        entityManager.getTransaction().begin();
+        EntityManager entityManager = Persistence.createEntityManagerFactory(DATABASE_NAME).createEntityManager();
 
-        Scanner scanner = new Scanner(System.in);
-        String[] name = scanner.nextLine().split("\\s+");
-
+        String[] name =  new Scanner(System.in).nextLine().split("\\s+");
 
         Long employeeCount =
-                entityManager.createQuery("SELECT COUNT(e) FROM Employee e" +
-                                        " WHERE e.firstName = : first_name " +
-                                        "AND e.lastName = :last_name",
-                                Long.class)
+                entityManager.createQuery(GET_EMPLOYEE_COUNT, Long.class)
                         .setParameter("first_name", name[0])
                         .setParameter("last_name", name[1])
                         .getSingleResult();
@@ -29,7 +26,6 @@ public class Main03_ContainsEmployee {
             System.out.println("NO");
         }
 
-        entityManager.getTransaction().commit();
         entityManager.close();
     }
 }

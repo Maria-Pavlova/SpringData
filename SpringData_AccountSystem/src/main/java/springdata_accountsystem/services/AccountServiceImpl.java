@@ -22,8 +22,9 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     @Override
     public void withdrawMoney(BigDecimal amount, Long id) throws InsufficientFoundException {
-//        Optional<Account> account = Optional.of(this.accountRepository
-//                .findById(id).orElseThrow());
+        Optional<Account> accountFrom = this.accountRepository
+                .findById(id);
+        //.orElseThrow() -> new RunTimeException("No account with this id"); // todo
 
         Account account = getAccount(id);
         if (account.getBalance().compareTo(amount) < 0){
@@ -34,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void transferMoney(BigDecimal amount, Long id) {
+    public void depositMoney(BigDecimal amount, Long id) {
 
         Account account = getAccount(id);
         if (amount.compareTo(BigDecimal.ZERO) > 0){
@@ -47,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
     public void transferBetweenAccounts(Long from, Long to, BigDecimal amount) {
 
         this.withdrawMoney(amount,from);
-        this.transferMoney(amount,to);
+        this.depositMoney(amount,to);
     }
 
     private Account getAccount(Long id) {

@@ -1,27 +1,25 @@
 import entities.Employee;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.Scanner;
 
 public class Main11_FindEmployeeByFirstName {
+    private static final String DATABASE_NAME = "soft_uni";
+    private static final String GET_EMPLOYEE_BY_NAME = "SELECT e FROM Employee e WHERE e.firstName LIKE :searched";
+
     public static void main(String[] args) {
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = factory.createEntityManager();
-        entityManager.getTransaction().begin();
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        EntityManager entityManager = Persistence.createEntityManagerFactory(DATABASE_NAME)
+                .createEntityManager();
 
-        entityManager.createQuery("SELECT e FROM Employee e " +
-                        "WHERE e.firstName LIKE :searched", Employee.class)
+        String input = new Scanner(System.in).nextLine();
+
+        entityManager.createQuery(GET_EMPLOYEE_BY_NAME, Employee.class)
                 .setParameter("searched", input + "%")
                 .getResultStream()
                 .forEach(e -> System.out.printf("%s %s - %s - ($%.2f)%n",
-                        e.getFirstName(), e.getLastName(), e.getJobTitle(), e.getSalary()));
+                         e.getFirstName(), e.getLastName(), e.getJobTitle(), e.getSalary()));
 
-        entityManager.getTransaction().commit();
         entityManager.close();
     }
 }

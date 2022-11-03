@@ -4,10 +4,10 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "books")
+@Entity
+@Table(name = "books")
 public class Book extends BaseEntity{
 
     @Column(length = 50, nullable = false)
@@ -19,14 +19,16 @@ public class Book extends BaseEntity{
     @Enumerated(EnumType.ORDINAL)
     private EditionType editionType;
 
+    @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(nullable = false)
     private Integer copies;
 
     @Column(name = "release_date")
     private LocalDate releaseDate;
 
-    @Column(name = "age_restriction")
+    @Enumerated(EnumType.ORDINAL)
     private AgeRestriction ageRestriction;
 
     @ManyToOne

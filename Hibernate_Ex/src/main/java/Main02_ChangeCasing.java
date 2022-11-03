@@ -1,19 +1,22 @@
-import entities.Town;
 
+import entities.Town;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.List;
 
 public class Main02_ChangeCasing {
+    private static final String DATABASE_NAME = "soft_uni";
+    private static final String GET_TOWNS = "SELECT t FROM Town t";
+
     public static void main(String[] args) {
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = factory.createEntityManager();
+        EntityManager entityManager = Persistence.createEntityManagerFactory(DATABASE_NAME)
+                .createEntityManager();
+
         entityManager.getTransaction().begin();
 
-        Query fromTown = entityManager.createQuery("SELECT t FROM Town t", Town.class);
+        Query fromTown = entityManager.createQuery(GET_TOWNS, Town.class);
         List<Town> resultList = fromTown.getResultList();
         for (Town town : resultList) {
             String name = town.getName();

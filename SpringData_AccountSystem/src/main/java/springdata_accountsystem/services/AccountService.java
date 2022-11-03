@@ -6,6 +6,6 @@ import java.math.BigDecimal;
 
 public interface AccountService {
     void withdrawMoney(BigDecimal amount, Long id) throws InsufficientFoundException;
-    void transferMoney(BigDecimal amount, Long id);
+    void depositMoney(BigDecimal amount, Long id);
     void transferBetweenAccounts(Long from, Long to, BigDecimal amount);
 }

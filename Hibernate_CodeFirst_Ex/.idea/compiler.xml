@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Hibernate_CodeFirst_Ex" />
+        <module name="FootballBetting" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="HibernateCodeFirst_GringottsDb" target="9" />
+    </bytecodeTargetLevel>
   </component>
 </project>

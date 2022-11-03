@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 public interface UserService {
 
-    void registerUser(User user);
+    void registerUser(String userName, int age);
 
     void addAccount(BigDecimal amount, long id) throws  UserNotFoundException;
 }

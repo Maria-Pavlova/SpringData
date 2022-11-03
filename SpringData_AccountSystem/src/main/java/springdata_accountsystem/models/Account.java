@@ -15,13 +15,17 @@ public class Account {
     @ManyToOne
     private User user;
 
-    public Account(BigDecimal balance, User user) {
-        this.balance = balance;
-        this.user = user;
+    public Account() {
+        this.balance = BigDecimal.ZERO;
     }
 
-    public Account() {
-    }
+
+//    public Account(BigDecimal balance, User user) {
+//        this.balance = BigDecimal.ZERO;
+//        this.user = user;
+//    }
+
+
 
     public long getId() {
         return id;

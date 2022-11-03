@@ -1,6 +1,7 @@
 package com.example.usersystem.models;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "albums")
@@ -15,19 +16,16 @@ public class Album extends BaseEntity{
     @Column(nullable = false)
     private boolean isPublic;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "albums")
-    private Set<Picture> pictures = new java.util.LinkedHashSet<>();
+    @ManyToMany
+    private Set<Picture> pictures;
+    
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public Album(String name, String backgroundColor, boolean isPublic, Set<Picture> pictures, User user) {
+    public Album(String name, String backgroundColor, boolean isPublic, Set<Picture> pictures) {
         this.name = name;
         this.backgroundColor = backgroundColor;
         this.isPublic = isPublic;
         this.pictures = pictures;
-        this.user = user;
+
     }
 
     public Album() {
@@ -65,11 +63,4 @@ public class Album extends BaseEntity{
         this.pictures = pictures;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

@@ -6,29 +6,33 @@ import javax.persistence.Persistence;
 import java.util.Scanner;
 
 public class Main06_AddingNewAddressAndUpdateEmpl {
+    private static final String DATABASE_NAME = "soft_uni";
+    private static final String UPDATE_EMPLOYEE_ADDRESS = "UPDATE Employee e SET e.address = :address " +
+                                                          "WHERE e.lastName = :name";
+
     public static void main(String[] args) {
 
-        EntityManagerFactory f = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = f.createEntityManager();
-        entityManager.getTransaction().begin();
+        EntityManager entityManager = Persistence.createEntityManagerFactory(DATABASE_NAME).createEntityManager();
 
-        Scanner scanner = new Scanner(System.in);
+        entityManager.getTransaction().begin();
 
         String addressText = "Vitoshka 15";
         Address address = new Address();
         address.setText(addressText);
         entityManager.persist(address);
 
-        String newName = scanner.nextLine();
+        String newName = new Scanner(System.in).nextLine();
 
-        entityManager.createQuery("UPDATE Employee e " +
-                        "SET e.address = :address " +
-                        "WHERE e.lastName = :name")
+        int count = entityManager.createQuery(UPDATE_EMPLOYEE_ADDRESS)
                 .setParameter("name", newName)
                 .setParameter("address", address)
                 .executeUpdate();
 
-        entityManager.getTransaction().commit();
+        if (count > 0){
+            entityManager.getTransaction().commit();
+        }else {
+            entityManager.getTransaction().rollback();
+        }
         entityManager.close();
     }
 }

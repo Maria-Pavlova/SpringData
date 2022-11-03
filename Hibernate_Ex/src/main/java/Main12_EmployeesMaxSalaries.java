@@ -1,32 +1,22 @@
-import entities.Department;
-import entities.Employee;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.List;
-import java.util.Scanner;
 
 public class Main12_EmployeesMaxSalaries {
+    private static final String DATABASE_NAME = "soft_uni";
+    private static final String GET_EMPLOYEE_MAX_SALARIES = "SELECT e.department.name, MAX(e.salary) FROM Employee e " +
+            "GROUP BY e.department.name " +
+            "HAVING MAX(e.salary) NOT BETWEEN 30000 AND 70000";
+
     public static void main(String[] args) {
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU_Name");
-        EntityManager entityManager = factory.createEntityManager();
-        entityManager.getTransaction().begin();
+        EntityManager entityManager = Persistence.createEntityManagerFactory(DATABASE_NAME)
+                .createEntityManager();
 
+        entityManager.createQuery(GET_EMPLOYEE_MAX_SALARIES, Object[].class)
+                .getResultList()
+                .forEach(o -> System.out.println(o[0] + " " + o[1]));
 
-        List resultList = entityManager.createNativeQuery("SELECT d.name, MAX(salary) AS 'max' FROM employees AS e " +
-                        "JOIN departments AS d ON e.department_id = d.department_id " +
-                        "GROUP BY d.name " +
-                        "HAVING `max` NOT BETWEEN 30000 AND 70000;")
-
-                .getResultList();
-
-
-//                .forEach(d -> System.out.printf("%s%n",
-//                        ));
-
-        entityManager.getTransaction().commit();
         entityManager.close();
     }
 }

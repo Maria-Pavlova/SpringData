@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,17 +24,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void registerUser(User user) {
+    public void registerUser(String userName, int age) {
+
+        if (userName.isBlank() || age < 18){
+            throw new RuntimeException("Validation failed");
+        }
+
+        Optional<User> byUsername = this.userRepository.findByUsername(userName);
+        if (byUsername.isPresent()) {
+            throw new RuntimeException("Username already in use");
+        }
+
+        Account account = new Account();
+        User user = new User(userName, age, account);
+
+        this.userRepository.save(user);
+
+
+
 //       Optional<User> found = Optional.ofNullable(this.userRepository
 //               .findByUsername(user.getUsername()));
 //       if (found.isEmpty()){
 //            this.userRepository.save(user);
 //        }
-
-
-        if (!userRepository.existsByUsername(user.getUsername())){
-            this.userRepository.save(user);
-        }
+//
+//        if (!userRepository.existsByUsername(user.getUsername())){
+//            this.userRepository.save(user);
+//        }
 
     }
 

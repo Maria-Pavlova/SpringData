@@ -2,6 +2,7 @@ package com.example.springintro.service;
 
 import com.example.springintro.model.entity.Book;
 import com.example.springintro.model.entity.EditionType;
+import com.example.springintro.service.model.BookInfo;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,9 +16,28 @@ public interface BookService {
 
     List<String> findAllBooksByAuthorFirstAndLastNameOrderByReleaseDate(String firstName, String lastName);
 
-    List<String> findTitleByAgeRestriction(String ageRestriction);
 
-    List<String> findByEditionTypeAndLessThanCopies(EditionType ty, int copies);
 
-    List<Book> findByPriceLessThanOrGreaterThan(double lowerBound, double upperBound);
+
+    void findTitleByAgeRestriction(String ageRestriction);
+
+    void findByEditionTypeAndCopiesLessThan(EditionType ty, int copies);
+
+    void findByPriceLessThanOrGreaterThan(double lowerBound, double upperBound);
+
+    void findByReleaseDateIsNot(int year);
+
+    void findByReleaseDateBefore(String date);
+
+    void findByTitleContains(String str);
+
+    void findByAuthorWithLastNameStartsWith(String str1);
+
+    void findByTitleLongerThan(int number);
+
+    BookInfo findBookByTitle(String title);
+
+    void printUpdatedCopiesCount(String date, int amount);
+
+    void deleteWithCopiesLessThan(int amount);
 }

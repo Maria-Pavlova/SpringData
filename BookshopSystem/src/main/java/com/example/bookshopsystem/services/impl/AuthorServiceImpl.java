@@ -5,13 +5,11 @@ import com.example.bookshopsystem.repositories.AuthorRepository;
 import com.example.bookshopsystem.repositories.BookRepository;
 import com.example.bookshopsystem.services.AuthorService;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
+
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
@@ -48,19 +46,19 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository
                 .findById(randomId)
                 .orElse(null);
-
     }
 
+    // 03.
     @Override
-    public List<String> getAllAuthorsOrderByCountOfBooks() {
-
-       return authorRepository
+    public void getAllAuthorsOrderByCountOfBooks() {
+        this.authorRepository
                 .findAllByBooksSizeDesc()
                 .stream()
                 .map(a -> String.format("%s %s %d",
                         a.getFirstName(), a.getLastName(),
                         a.getBooks().size()))
-                .collect(Collectors.toList());
+                .toList()
+                .forEach(System.out::println);
 
     }
 

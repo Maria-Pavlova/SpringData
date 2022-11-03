@@ -2,9 +2,11 @@ package com.example.bookshopsystem.models.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
 
-@Entity(name = "categories")
+@Entity
+@Table(name = "categories")
 public class Category extends BaseEntity{
 
     @Column(nullable = false, unique = true)

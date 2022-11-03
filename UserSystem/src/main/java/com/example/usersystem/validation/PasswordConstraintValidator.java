@@ -1,27 +1,36 @@
 package com.example.usersystem.validation;
 
+import com.example.usersystem.models.User;
 import org.passay.*;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.Valid;
 import java.util.Arrays;
 
-public class PasswordConstraintValidator implements ConstraintValidator<Password, String> {
+public  class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, User> {
 
     @Override
-    public void initialize(Password arg0) {
+    public void initialize(final ValidPassword arg0) {
 
     }
 
     @Override
-    public boolean isValid(String password, ConstraintValidatorContext context) {
+    public boolean isValid(User user, ConstraintValidatorContext context) {
+
+        String password = user.getPassword();
+
+     //   MessageResolver resolver = new PropertiesMessageResolver(password)
         PasswordValidator passwordValidator = new PasswordValidator (
                 (Rule) Arrays.asList(
                 new LengthRule(6, 50),
-                new UppercaseCharacterRule(1),
-                new DigitCharacterRule(1),
-                new SpecialCharacterRule(1)
-                )
-        );
+
+        new CharacterRule(EnglishCharacterData.UpperCase, 1),
+
+        new CharacterRule(EnglishCharacterData.LowerCase, 1),
+
+        new CharacterRule(EnglishCharacterData.Digit, 1),
+
+        new CharacterRule(EnglishCharacterData.Special, 1)));
 
 //                new NumericalSequenceRule(3,false),
 //                new AlphabeticalSequenceRule(3,false),

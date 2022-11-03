@@ -11,4 +11,8 @@ public interface AuthorService {
     Author getRandomAuthor();
 
     List<String> getAllAuthorsOrderByCountOfTheirBooks();
+
+   void findByFirstNameEndsWith(String string);
+
+    void countCopiesByAuthor();
 }
