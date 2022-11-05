@@ -1,6 +1,4 @@
 package com.example.usersystem.models;
-
-import com.example.usersystem.validation.ValidPassword;
 import org.springframework.data.annotation.Transient;
 
 import javax.persistence.*;
@@ -30,16 +28,7 @@ public class User extends BaseEntity {
     @Transient
     private String fullName;
 
-    //  @ValidPassword(message = "Invalid password")
-
-    @Password(minLength = 6,
-            maxLength = 50,
-            containsDigit = true,
-            containsLowerCase = true,
-            containsUpperCase = true,
-            containsSpecial = true
-            )
-
+    @javax.validation.constraints.Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,50}$", message = "Invalid password")
     @NotNull
     private String password;
 

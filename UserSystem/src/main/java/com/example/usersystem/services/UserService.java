@@ -2,11 +2,10 @@ package com.example.usersystem.services;
 
 import com.example.usersystem.models.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface UserService {
-    void seedUser();
+    void addUser(User user);
 
     List<User> findUserByEmailProvider(String provider);
 

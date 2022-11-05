@@ -2,34 +2,38 @@ package com.example.usersystem.services;
 
 import com.example.usersystem.models.User;
 import com.example.usersystem.repositories.UserRepository;
+import com.example.usersystem.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ValidationUtil validationUtil;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ValidationUtil validationUtil) {
         this.userRepository = userRepository;
+        this.validationUtil = validationUtil;
     }
 
 
     @Override
-    public void seedUser() {
-        User user2 = new User("userTest2InvalidPass", "first1", "last1", "pass", "alabala@bg.com",
-                LocalDateTime.now(), LocalDateTime.now(),25, false
-                );
-        userRepository.save(user2);
-
-            User user1 = new User("userTest", "first2","last2", "Alabala1@", "alabala@ala.bala.com",
-            LocalDateTime.now(), LocalDateTime.now(), 25, false);
-    userRepository.save(user1);
+    public void addUser(User user) {
+        Set<ConstraintViolation<User>> violations = validationUtil.getViolations(user);
+        if (!violations.isEmpty()) {
+            violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .forEach(System.out::println);
+            return;
+        }
+        userRepository.save(user);
     }
 
     @Override
@@ -57,4 +61,3 @@ public class UserServiceImpl implements UserService {
         return userRepository.deleteAllByDeletedIsTrue();
     }
 }
-//   TODO password validator

@@ -4,7 +4,6 @@ import com.example.usersystem.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,17 +17,26 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Invalid user
+//        User user2 = new User("userTest2InvalidPass", "first1", "last1", "invalid", "alabalabg.com",
+//                LocalDateTime.now(), LocalDateTime.now(),25, false);
 
-      //  userService.seedUser();
+        // Valid user
 
-     //   findUsersByEmailProvider();
+//            User user1 = new User("userTest", "first2","last2", "Alabala1@", "alabala@gmail.com",
+//            LocalDateTime.now(), LocalDateTime.now(), 25, false);
 
-        // Ensure that in DB there is a user with date before you need
+      //  userService.addUser(user1);
+
+
+       // findUsersByEmailProvider();
+
+        // Ensure that in DB there is a user with date before searched !!
 //        int count = userService.updateUsersIsDeleted("2022-10-25 10:00:00.000000");
 //        System.out.println(count + "users have been set as deleted");
 
-        int countDeleted = userService.deleteAllByDeletedIsTrue();
-        System.out.println(countDeleted + " users was deleted");
+//        int countDeleted = userService.deleteAllByDeletedIsTrue();
+//        System.out.println(countDeleted + " users was deleted");
 
 
     }
