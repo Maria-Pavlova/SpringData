@@ -1,9 +1,8 @@
 package com.example.softunigamestore.models.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import com.example.softunigamestore.models.ShoppingCart;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,13 +15,26 @@ public class Order extends BaseEntity{
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Game> products;
 
+    @Transient
+    @OneToOne
+    private ShoppingCart shoppingCart;
+
     public Order() {
-      //  this.products = new HashSet<>();
+        this.products = new HashSet<>();
     }
 
-    public Order(User buyer, Set<Game> products) {
+    public Order(User buyer, ShoppingCart shoppingCart) {
+        this();
         this.buyer = buyer;
-        this.products = products;
+        this.shoppingCart = shoppingCart;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 
     public User getBuyer() {
@@ -39,5 +51,13 @@ public class Order extends BaseEntity{
 
     public void setProducts(Set<Game> products) {
         this.products = products;
+    }
+
+    public void addProduct(Game game){
+        this.products.add(game);
+    }
+
+    public void deleteProduct(Game game){
+        this.products.remove(game);
     }
 }

@@ -25,7 +25,7 @@ public class UserLoginDto {
         this.email = email;
     }
 
-    @Pattern(regexp = "[A-Za-z\\d]{6,}") //, message = "Enter valid password")
+    @Pattern(regexp = "[A-Za-z\\d]{6,}", message = "Enter valid password")
     public String getPassword() {
         return password;
     }

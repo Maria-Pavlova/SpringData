@@ -4,7 +4,9 @@ import com.example.softunigamestore.models.dto.GameAddDto;
 import com.example.softunigamestore.models.dto.UserLoginDto;
 import com.example.softunigamestore.models.dto.UserRegisterDto;
 import com.example.softunigamestore.service.GameService;
+import com.example.softunigamestore.service.OrderService;
 import com.example.softunigamestore.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +22,13 @@ public class ConsoleRunner implements CommandLineRunner {
     private final BufferedReader bufferedReader;
     private final UserService userService;
     private final GameService gameService;
+    private final OrderService orderService;
 
-    public ConsoleRunner(UserService userService, GameService gameService) {
+    @Autowired
+    public ConsoleRunner(UserService userService, GameService gameService, OrderService orderService) {
         this.userService = userService;
         this.gameService = gameService;
+        this.orderService = orderService;
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
@@ -47,7 +52,10 @@ public class ConsoleRunner implements CommandLineRunner {
                     case "DeleteGame" -> gameService.deleteGame(Long.parseLong(commands[1]));
                     case "AllGames" -> gameService.allGames();
                     case "DetailGame" -> gameService.detailGame(commands[1]);
-
+                    case "OwnedGames" -> userService.getOwnedGames().forEach(System.out::println);
+                    case "AddItem" -> orderService.addItem(commands[1]);
+                    case "RemoveItem" -> orderService.removeItem(commands[1]);
+                    case "BuyItem" -> orderService.buyItem();
                 }
             }
         }

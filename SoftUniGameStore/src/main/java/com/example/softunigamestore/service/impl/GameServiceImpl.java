@@ -1,7 +1,9 @@
 package com.example.softunigamestore.service.impl;
 
+import com.example.softunigamestore.models.dto.AllGamesDto;
 import com.example.softunigamestore.models.dto.GameAddDto;
 import com.example.softunigamestore.models.entity.Game;
+import com.example.softunigamestore.models.dto.GameDetailsDto;
 import com.example.softunigamestore.models.entity.User;
 import com.example.softunigamestore.repositories.GameRepository;
 import com.example.softunigamestore.service.GameService;
@@ -9,6 +11,7 @@ import com.example.softunigamestore.service.UserService;
 import com.example.softunigamestore.util.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
 import javax.validation.ConstraintViolation;
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,18 +36,18 @@ public class GameServiceImpl implements GameService {
     @Override
     public void addGame(GameAddDto gameAddDto) {
 
-        if(!userService.hasLoggedInUser()){
+        if (!userService.hasLoggedInUser()) {
             return;
         }
         User loggedInUser = userService.getLoggedInUser();
 
-        if (!loggedInUser.isAdmin()){
+        if (!loggedInUser.isAdmin()) {
             throw new UnsupportedOperationException("Unsupported operation. User must be admin");
         }
 
         Set<ConstraintViolation<GameAddDto>> violations = validationUtil.getViolations(gameAddDto);
 
-        if (!violations.isEmpty()){
+        if (!violations.isEmpty()) {
             violations.stream().map(ConstraintViolation::getMessage).forEach(System.out::println);
             return;
         }
@@ -59,7 +62,7 @@ public class GameServiceImpl implements GameService {
     public void editGame(Long gameId, BigDecimal price, Double size) {
         Game game = gameRepository.findById(gameId).orElse(null);
 
-        if (game== null){
+        if (game == null) {
             System.out.println("Id is not valid");
             return;
         }
@@ -77,22 +80,24 @@ public class GameServiceImpl implements GameService {
             System.out.println("The game is not present");
             return;
         }
-            gameRepository.delete(game);
-            System.out.println("Deleted " + game.getTitle());
+        gameRepository.delete(game);
+        System.out.println("Deleted " + game.getTitle());
 
     }
 
     @Override
     public void allGames() {
-      //  List<Game> games =
-                gameRepository.findAll()
-                        .forEach(g-> System.out.printf("%s %.2f%n",g.getTitle(), g.getPrice()));
+        gameRepository.findAll()
+                .stream()
+                .map(game -> modelMapper.map(game, AllGamesDto.class))
+                .forEach(System.out::println);
 
     }
 
     @Override
     public void detailGame(String title) {
         Game game = gameRepository.findByTitle(title);
-        System.out.println(game);
+        GameDetailsDto gameDetailsDto = modelMapper.map(game, GameDetailsDto.class);
+        System.out.println(gameDetailsDto);
     }
 }

@@ -2,10 +2,7 @@ package com.example.softunigamestore.models.entity;
 
 import com.example.softunigamestore.models.dto.GameAddDto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +20,7 @@ public class User extends BaseEntity {
     @Column(name = "is_admin")
     private boolean isAdmin;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Game> games;
 
     @OneToMany(targetEntity = Order.class, mappedBy = "buyer")

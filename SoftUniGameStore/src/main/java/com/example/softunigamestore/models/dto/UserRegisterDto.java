@@ -55,4 +55,6 @@ public class UserRegisterDto {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
+
 }

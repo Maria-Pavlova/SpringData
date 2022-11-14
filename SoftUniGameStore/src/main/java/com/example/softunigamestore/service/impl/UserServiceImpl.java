@@ -2,6 +2,7 @@ package com.example.softunigamestore.service.impl;
 
 import com.example.softunigamestore.models.dto.UserLoginDto;
 import com.example.softunigamestore.models.dto.UserRegisterDto;
+import com.example.softunigamestore.models.entity.Game;
 import com.example.softunigamestore.models.entity.User;
 import com.example.softunigamestore.repositories.UserRepository;
 import com.example.softunigamestore.service.UserService;
@@ -10,7 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,30 +31,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserRegisterDto userRegisterDto) {
-        if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword())){
+        if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword())) {
             System.out.println("Wrong confirm password");
             return;
         }
 
         Set<ConstraintViolation<UserRegisterDto>> violations = validationUtil.getViolations(userRegisterDto);
 
-        if (!violations.isEmpty()){
+        if (!violations.isEmpty()) {
             violations.stream()
                     .map(ConstraintViolation::getMessage)
                     .forEach(System.out::println);
             return;
         }
 
-        if (loggedInUser != null){
+        if (loggedInUser != null) {
             System.out.println("This user exists and is logged in");
         }
 
         User user = modelMapper.map(userRegisterDto, User.class);
 
         long userCount = this.userRepository.count();
-        if (userCount == 0){
+        if (userCount == 0) {
             user.setAdmin(true);
         }
+
         userRepository.save(user);
         System.out.println(user.getFullName() + " was registered");
 
@@ -84,13 +88,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<String> getOwnedGames() {
+// todo check
+        if (loggedInUser == null) {
+            throw new RuntimeException("User have to be loggedIn");
+        }
+
+        return loggedInUser.getGames()
+                .stream()
+                .map(Game::getTitle)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void logout() {
-        if (loggedInUser == null){
+        if (loggedInUser == null) {
             System.out.println("Cannot log out. No user was logged in");
 
-        }else {
+        } else {
 
-            System.out.println("User "+ loggedInUser.getFullName() +" successfully logged out");
+            System.out.println("User " + loggedInUser.getFullName() + " successfully logged out");
             loggedInUser = null;
         }
     }
