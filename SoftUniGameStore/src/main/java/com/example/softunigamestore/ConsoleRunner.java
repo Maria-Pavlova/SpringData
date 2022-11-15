@@ -53,8 +53,10 @@ public class ConsoleRunner implements CommandLineRunner {
                     case "AllGames" -> gameService.allGames();
                     case "DetailGame" -> gameService.detailGame(commands[1]);
                     case "OwnedGames" -> userService.getOwnedGames().forEach(System.out::println);
-                    case "AddItem" -> orderService.addItem(commands[1]);
-                    case "RemoveItem" -> orderService.removeItem(commands[1]);
+                    case "AddItem" ->
+                            orderService.addItem(commands[1]);
+                    case "RemoveItem" ->
+                            orderService.removeItem(commands[1]);
                     case "BuyItem" -> orderService.buyItem();
                 }
             }

@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity(name = "games")
 public class Game extends BaseEntity {
@@ -106,5 +107,18 @@ public class Game extends BaseEntity {
                 "Price: " + price + '\n'+
                 "Description: " + description + '\n' +
                 "Release date: " + releaseDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return title.equals(game.title) && trailer.equals(game.trailer) && imageThumbnail.equals(game.imageThumbnail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, trailer, imageThumbnail);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.softunigamestore.models;
+package com.example.softunigamestore.models.entity;
 
 import com.example.softunigamestore.models.entity.Game;
 
@@ -7,10 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class ShoppingCart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class ShoppingCart extends BaseEntity{
     @ManyToMany
     private Set<Game> shoppingList;
 

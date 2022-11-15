@@ -6,6 +6,5 @@ public interface OrderService {
 
     void removeItem(String gameName);
 
-    void orderItem();
     void buyItem();
 }

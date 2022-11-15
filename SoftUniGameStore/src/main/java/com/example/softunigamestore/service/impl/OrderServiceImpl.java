@@ -1,11 +1,13 @@
 package com.example.softunigamestore.service.impl;
 
-import com.example.softunigamestore.models.ShoppingCart;
+import com.example.softunigamestore.exceptions.ExistingGameException;
+import com.example.softunigamestore.models.entity.ShoppingCart;
 import com.example.softunigamestore.models.entity.Game;
 import com.example.softunigamestore.models.entity.Order;
 import com.example.softunigamestore.models.entity.User;
 import com.example.softunigamestore.repositories.GameRepository;
 import com.example.softunigamestore.repositories.OrderRepository;
+import com.example.softunigamestore.repositories.ShoppingCartRepository;
 import com.example.softunigamestore.repositories.UserRepository;
 import com.example.softunigamestore.service.OrderService;
 import com.example.softunigamestore.service.UserService;
@@ -21,16 +23,17 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final GameRepository gameRepository;
     private final UserService userService;
-    private ShoppingCart shoppingCart;
+    private ShoppingCart currentShoppingCart;
     private UserRepository userRepository;
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, GameRepository gameRepository, UserService userService, UserRepository userRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, GameRepository gameRepository, UserService userService, UserRepository userRepository, ShoppingCartRepository shoppingCartRepository) {
         this.orderRepository = orderRepository;
         this.gameRepository = gameRepository;
         this.userService = userService;
         this.userRepository = userRepository;
-        this.shoppingCart = new ShoppingCart();
+        this.shoppingCartRepository = shoppingCartRepository;
 
     }
 
@@ -39,12 +42,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void addItem(String gameName) {
         Game game = gameRepository.findByTitle(gameName);
-        if (userService.getOwnedGames().contains(gameName)) {
-            throw new RuntimeException("Impossible operation. User owns this game");
-        }
-
-        if (!shoppingCart.getShoppingList().contains(game)) {
-            shoppingCart.addProduct(game);
+            currentShoppingCart = new ShoppingCart();
+        if (userService.getOwnedGames().contains(game)) {
+            throw new ExistingGameException("The Game already exists!");
+        } else if (currentShoppingCart.getShoppingList().contains(game)) {
+            throw new ExistingGameException("The Game already exists!");
+        } else {
+            currentShoppingCart.addProduct(game);
+            shoppingCartRepository.saveAndFlush(currentShoppingCart);
             System.out.println(gameName + " added to cart.");
         }
     }
@@ -52,33 +57,36 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void removeItem(String gameName) {
-        Game game = gameRepository.findByTitle(gameName);
-        if (shoppingCart.getShoppingList().contains(game)) {
-            shoppingCart.removeGame(game);
-            System.out.println(gameName + " removed from cart.");
-            //todo
-        }
-    }
+        Game gameToDelete = gameRepository.findByTitle(gameName);
 
-    @Override
-    public void orderItem() {
-        Order order = new Order();
+        if (currentShoppingCart.getShoppingList().contains(gameToDelete)) {
+            currentShoppingCart.removeGame(gameToDelete);
+            shoppingCartRepository.saveAndFlush(currentShoppingCart);
+            System.out.println(gameToDelete.getTitle() + " removed from cart.");
+
+        }else {
+            System.out.println("The game is not in the shopping list.");
+        }
+
     }
 
     @Transactional
     @Override
     public void buyItem() {
 
-        Set<Game> shoppingList = shoppingCart.getShoppingList();
+        Set<Game> shoppingList = currentShoppingCart.getShoppingList();
         User buyer = userService.getLoggedInUser();
-          Order order = new Order(buyer,shoppingCart);
+          Order order = new Order(buyer,currentShoppingCart);
         Set<Game> products = order.getProducts();
         products.addAll(shoppingList);
         orderRepository.save(order);
         buyer.getGames().addAll(products);
         userRepository.save(buyer);
-//todo shoping list removeAll
-        System.out.println("Successfully bought games:\n  -" + products.toString());
+
+        System.out.println("Successfully bought games:");
+        shoppingList.stream().map(Game::getTitle)
+                .forEach(System.out::println);
+        shoppingList.clear();
 
     }
 }

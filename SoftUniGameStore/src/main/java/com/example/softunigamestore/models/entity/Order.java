@@ -1,7 +1,5 @@
 package com.example.softunigamestore.models.entity;
 
-import com.example.softunigamestore.models.ShoppingCart;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,4 +58,6 @@ public class Order extends BaseEntity{
     public void deleteProduct(Game game){
         this.products.remove(game);
     }
+
+
 }
