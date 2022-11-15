@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -48,7 +49,7 @@ public class SeedServiceImpl implements SeedService {
     public void seedCategories() throws IOException {
         String fileContent = Files.readString(Path.of(FilePaths.PATH_CATEGORIES));
         CategorySeedDto[] categorySeedDtos = gson.fromJson(fileContent, CategorySeedDto[].class);
-        List<Category> categories = Arrays.stream(categorySeedDtos)
+        final List<Category> categories = Arrays.stream(categorySeedDtos)
                 .filter(validationUtil::isValid)
                 .map(categorySeedDto -> modelMapper.map(categorySeedDto, Category.class)).toList();
         categoryService.seedCategories(categories);
@@ -57,10 +58,13 @@ public class SeedServiceImpl implements SeedService {
     @Override
     public void seedUsers() throws IOException {
         UserSeedDto[] userSeedDtos = gson.fromJson(Files.readString(Path.of(PATH_USERS)), UserSeedDto[].class);
-        List<User> users = Arrays.stream(userSeedDtos)
+        final List<User> users = Arrays.stream(userSeedDtos)
                 .filter(validationUtil::isValid)
                 .map(userSeedDto -> modelMapper.map(userSeedDto, User.class)).toList();
         userService.seedUsers(users);
+
+//        FileReader reader = new FileReader(Path.of(PATH_USERS).toFile());
+//        UserSeedDto[] userSeedDtos = gson.fromJson(reader, UserSeedDto[].class);
 
     }
 
@@ -69,7 +73,7 @@ public class SeedServiceImpl implements SeedService {
 
         ProductSeedDto[] productSeedDtos = gson.fromJson(Files.readString(Path.of(PATH_PRODUCTS)), ProductSeedDto[].class);
 
-        List<Product> products = Arrays.stream(productSeedDtos)
+        final List<Product> products = Arrays.stream(productSeedDtos)
                 .filter(validationUtil::isValid)
                 .map(productSeedDto -> {
                     Product product = modelMapper.map(productSeedDto, Product.class);

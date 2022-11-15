@@ -12,5 +12,5 @@ public interface UserService {
 
     void getUsersSoldProducts() throws IOException;
 
-    void getUsersAndProducts();
+    void getUsersAndProducts() throws IOException;
 }

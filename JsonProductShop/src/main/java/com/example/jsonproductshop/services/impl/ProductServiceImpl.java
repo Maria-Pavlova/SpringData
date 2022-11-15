@@ -14,9 +14,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 import static com.example.jsonproductshop.constants.FilePaths.*;
@@ -36,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void seedProducts(List<Product> products) {
         if (productRepository.count() == 0) {
-            productRepository.saveAll(products);
+            productRepository.saveAllAndFlush(products);
         }
     }
 
@@ -56,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
                 }).toList();
 
         String jsonContent = gson.toJson(dtos);
-
+        System.out.println(jsonContent);
         writeToFile(OUTPUT_PATH + PRODUCTS_IN_RANGE_FILE, jsonContent);
     }
 
@@ -65,7 +63,6 @@ public class ProductServiceImpl implements ProductService {
         List<CategoryStatisticDto> statisticDtos =
                 productRepository.findCategoryByProductsCount()
                         .stream()
-                        .sorted(Comparator.comparingLong(CategoryStatisticDto::getProductsCount).reversed())
                         .toList();
         String jsonContent = gson.toJson(statisticDtos);
         System.out.println(jsonContent);

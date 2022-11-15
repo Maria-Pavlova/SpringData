@@ -6,11 +6,9 @@ import com.example.jsonproductshop.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -27,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void seedCategories(List<Category> categories){
         if (categoryRepository.count() == 0) {
-            categoryRepository.saveAll(categories);
+            categoryRepository.saveAllAndFlush(categories);
         }
     }
 
@@ -35,6 +33,11 @@ public class CategoryServiceImpl implements CategoryService {
     public Set<Category> getRandomCategories() {
         Set<Category> categories = new HashSet<>();
         int returnedCount = new Random().nextInt(1,3);
+
+//        IntStream.range(1,returnedCount).forEach(number-> {
+//            Category category = this.categoryRepository.getRandomEntity().orElseThrow(NoSuchElementException::new);
+//            categories.add(category);
+//        });
 
         for (int i = 0; i < returnedCount; i++) {
             long randId = new Random().nextLong(1, categoryRepository.count() + 1);

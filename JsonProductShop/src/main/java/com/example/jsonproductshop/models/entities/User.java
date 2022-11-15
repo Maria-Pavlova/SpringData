@@ -1,6 +1,8 @@
 package com.example.jsonproductshop.models.entities;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,13 +21,18 @@ public class User extends BaseEntity{
     private String firstName;
     @NotNull
     private String lastName;
-    private int age;
+    private Integer age;
+
     @ManyToMany
     private Set<User> friends;
-    @OneToMany(mappedBy = "seller",fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "seller")
+    @Fetch(FetchMode.JOIN)
     @ToString.Exclude
     private List<Product> productsSold;
-    @OneToMany(mappedBy = "buyer", fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "buyer")
+    @Fetch(FetchMode.JOIN)
     private List<Product> productsBought;
 
     public long getSoldProductsCount(){

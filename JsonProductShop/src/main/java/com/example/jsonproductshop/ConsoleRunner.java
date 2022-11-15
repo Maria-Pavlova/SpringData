@@ -31,10 +31,8 @@ public class ConsoleRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-//        seedService.seedCategories();
-//       seedService.seedUsers();
-//        seedService.seedProducts();
-//
+     //   seedService.seedAll();
+
         System.out.println("Enter number of query:");
 
         int numOfQuery = Integer.parseInt(bufferedReader.readLine());
@@ -44,10 +42,5 @@ public class ConsoleRunner implements CommandLineRunner {
             case 3 -> productService.getCategoriesByProducts();
             case 4 -> userService.getUsersAndProducts();
         }
-
-
-
     }
-
-
 }

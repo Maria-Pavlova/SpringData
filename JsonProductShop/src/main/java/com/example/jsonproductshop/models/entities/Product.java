@@ -1,6 +1,8 @@
 package com.example.jsonproductshop.models.entities;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
@@ -24,9 +26,12 @@ public class Product extends BaseEntity{
     @NotNull
     private BigDecimal price;
     @ManyToOne
+    @Fetch(FetchMode.JOIN)
     private User buyer;
     @ManyToOne
+    @Fetch(FetchMode.JOIN)
     private User seller;
     @ManyToMany
+    @Fetch(FetchMode.JOIN)
     private Set<Category> categories;
 }

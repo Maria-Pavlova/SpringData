@@ -3,7 +3,6 @@ package com.example.jsonproductshop.models.dto;
 import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -11,10 +10,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SoldProductsCountDto {
+public class UsersWithSoldProductsDto {
     @Expose
-    private long count;
+    private String firstName;
     @Expose
-    private List<ProductNameAndPrice> products;
-
+    private String lastName;
+    @Expose
+    private Integer age;
+    @Expose
+    private SoldProductsWithCountDto soldProducts;
 }

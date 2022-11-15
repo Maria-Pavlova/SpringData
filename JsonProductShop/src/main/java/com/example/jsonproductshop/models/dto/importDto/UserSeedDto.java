@@ -20,5 +20,5 @@ public class UserSeedDto implements Serializable {
     @Length(min = 3, message = "The name must be at least 3 symbols")
     private String lastName;
     @Expose
-    private int age;
+    private Integer age;
 }

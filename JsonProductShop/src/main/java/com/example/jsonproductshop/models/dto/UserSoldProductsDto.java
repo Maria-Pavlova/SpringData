@@ -1,6 +1,7 @@
 package com.example.jsonproductshop.models.dto;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,6 @@ public class UserSoldProductsDto implements Serializable {
     @Expose
     private String lastName;
     @Expose
+    @SerializedName("soldProducts")
     private List<SoldProductDto> productsBought;
 }

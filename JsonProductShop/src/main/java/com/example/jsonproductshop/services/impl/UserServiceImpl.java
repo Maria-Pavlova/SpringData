@@ -2,6 +2,7 @@ package com.example.jsonproductshop.services.impl;
 
 import com.example.jsonproductshop.models.dto.*;
 import com.example.jsonproductshop.models.entities.User;
+import com.example.jsonproductshop.models.entities.UserDto;
 import com.example.jsonproductshop.repositories.UserRepository;
 import com.example.jsonproductshop.services.UserService;
 import com.google.gson.Gson;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void seedUsers(List<User> users) {
         if (userRepository.count() == 0){
-            userRepository.saveAll(users);
+            userRepository.saveAllAndFlush(users);
         }
     }
 
@@ -56,43 +57,26 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
 
         String jsonContent = gson.toJson(userSoldProductsDtos);
-
         System.out.println(jsonContent);
-
         writeToFile(OUTPUT_PATH + USERS_SOLD_PRODUCTS_FILE, jsonContent);
     }
 
     @Override
     @Transactional
-    public void getUsersAndProducts() {
+    public void getUsersAndProducts() throws IOException {
         //todo
-      //  List<UsersAndProductsDto> usersAndProductsDtos =
-        List<User> allUsersAndSoldProducts = userRepository.findAllUsersAndSoldProducts();
-        int countProducts = allUsersAndSoldProducts.get(0).getProductsSold().size();
-        int usersCount = allUsersAndSoldProducts.size();
-
-
-//        TypeMap<User, UsersAndProductsDto> typeMap = modelMapper.createTypeMap(User.class,UsersAndProductsDto.class)
-//                .addMapping(m-> m.map(User::getProductsSold), SoldProductsCountDto::getSoldProducts);
-
-
-        List<UsersAndProductsDto> usersAndProductsDtos = allUsersAndSoldProducts
+        List<UsersWithSoldProductsDto> usersWithSoldProductsDtos = userRepository.findAllUsersAndSoldProducts()
                 .stream()
-                .map(user -> {
-                            UsersAndProductsDto usersAndProductsDto = modelMapper.map(user, UsersAndProductsDto.class);
-                            usersAndProductsDto.setUsersCount(usersCount);
-                        //    usersAndProductsDto.setSoldProducts();
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .map(UserDto::toUsersWithSoldProductsDto)
+                .collect(Collectors.toList());
+        UsersAndProductsWrapperDto usersAndProductsWrapperDto = new UsersAndProductsWrapperDto(usersWithSoldProductsDtos);
 
-                          //  usersAndProductsDto.setUsers();
 
-                            return usersAndProductsDto;
-                        }
-                ).toList();
-
-        //    .collect(Collectors.toList());
-        String jsonContent = gson.toJson(usersAndProductsDtos);
+        String jsonContent = gson.toJson(usersAndProductsWrapperDto);
 
         System.out.println(jsonContent);
+        writeToFile(OUTPUT_PATH + USERS_AND_PRODUCTS_FILE, jsonContent);
     }
 
     private void writeToFile(String filePath, String content) throws IOException {

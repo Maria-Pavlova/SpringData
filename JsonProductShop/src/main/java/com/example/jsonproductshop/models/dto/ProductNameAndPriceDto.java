@@ -3,21 +3,15 @@ package com.example.jsonproductshop.models.dto;
 import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsersWithSoldProducts {
+public class ProductNameAndPriceDto {
     @Expose
-    private String firstName;
+    private String name;
     @Expose
-    private String lastName;
-    @Expose
-    private int age;
-    @Expose
-    private List<SoldProductsCountDto> soldProducts;
+    private BigDecimal price;
 }
