@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CustomerDto implements Serializable {
     private String name;
-    private String birthDate;
+    private LocalDateTime birthDate;
     private boolean isYoungDriver;
 }

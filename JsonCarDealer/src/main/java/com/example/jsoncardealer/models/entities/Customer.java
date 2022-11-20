@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(name = "customers")
 public class Customer extends BaseEntity{
     private String name;
-    private String birthDate;
+    private LocalDateTime birthDate;
     private boolean isYoungDriver;
     @OneToMany(mappedBy = "customer")
     @Fetch(FetchMode.JOIN)

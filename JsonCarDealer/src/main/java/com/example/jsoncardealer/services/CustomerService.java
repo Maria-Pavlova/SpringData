@@ -9,7 +9,7 @@ public interface CustomerService {
 
     void seedCustomers(List<Customer> customers);
 
-    void getOrderedCustomers();
+    void getOrderedCustomers() throws IOException;
 
     void getCustomersTotalSales() throws IOException;
 }

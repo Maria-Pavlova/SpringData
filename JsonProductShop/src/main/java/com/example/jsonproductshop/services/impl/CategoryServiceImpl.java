@@ -34,18 +34,15 @@ public class CategoryServiceImpl implements CategoryService {
         Set<Category> categories = new HashSet<>();
         int returnedCount = new Random().nextInt(1,3);
 
-//        IntStream.range(1,returnedCount).forEach(number-> {
-//            Category category = this.categoryRepository.getRandomEntity().orElseThrow(NoSuchElementException::new);
-//            categories.add(category);
-//        });
-
         for (int i = 0; i < returnedCount; i++) {
             long randId = new Random().nextLong(1, categoryRepository.count() + 1);
-
             categories.add(categoryRepository.findById(randId).orElse(null));
         }
         return categories;
     }
 
-
+//        IntStream.range(1,returnedCount).forEach(number-> {
+//            Category category = this.categoryRepository.getRandomEntity().orElseThrow(NoSuchElementException::new);
+//            categories.add(category);
+//        });
 }

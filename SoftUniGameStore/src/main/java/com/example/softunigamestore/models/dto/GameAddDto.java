@@ -26,7 +26,7 @@ public class GameAddDto {
         this.releaseDate = releaseDate;
     }
 
-    @Pattern(regexp = "[A-Z].{3,100}", message = "Enter valid title")
+    @Pattern(regexp = "[a-zA-Z0-9.'\\-_\\s].{3,100}", message = "Enter valid title")
     public String getTitle() {
         return title;
     }

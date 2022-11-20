@@ -1,6 +1,6 @@
 package com.example.jsoncardealer.services.impl;
 
-import com.example.jsoncardealer.models.dtoImport.CarDto;
+import com.example.jsoncardealer.models.dtoImport.CarImportDto;
 import com.example.jsoncardealer.models.dtoImport.CustomerDto;
 import com.example.jsoncardealer.models.dtoImport.PartDto;
 import com.example.jsoncardealer.models.dtoImport.SupplierDto;
@@ -15,11 +15,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import static com.example.jsoncardealer.constants.FilePath.*;
 
@@ -67,10 +64,10 @@ public class SeedServiceImpl implements SeedService {
 
     @Override
     public void seedCars() throws IOException {
-        CarDto[] carDtos = gson.fromJson(Files.readString(Path.of(PATH_CARS)), CarDto[].class);
-        List<Car> cars = Arrays.stream(carDtos)
-                .map(carDto -> {
-                    Car car = modelMapper.map(carDto, Car.class);
+        CarImportDto[] carImportDtos = gson.fromJson(Files.readString(Path.of(PATH_CARS)), CarImportDto[].class);
+        List<Car> cars = Arrays.stream(carImportDtos)
+                .map(carImportDto -> {
+                    Car car = modelMapper.map(carImportDto, Car.class);
                     car.setParts(partService.getRandomParts());
                     return car;
                 }).toList();
@@ -87,16 +84,6 @@ public class SeedServiceImpl implements SeedService {
                 .map(customerDto -> modelMapper.map(customerDto, Customer.class))
                 .toList();
 
-//                .map(customerDto -> {
-//                    Customer customer = modelMapper.map(CustomerDto.class, Customer.class);
-//
-//
-//                    LocalDateTime converted =
-//                            LocalDateTime.parse(customerDto.getBirthDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").withLocale(Locale.ENGLISH));
-//                    customer.setBirthDate(converted);
-//                    customer.setName(customerDto.getName());
-//                    return customer;
- //               }).toList();
         customerService.seedCustomers(customers);
     }
 

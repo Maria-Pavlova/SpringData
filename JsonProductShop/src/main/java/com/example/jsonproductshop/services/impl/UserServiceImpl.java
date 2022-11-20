@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void getUsersAndProducts() throws IOException {
-        //todo
+
         List<UsersWithSoldProductsDto> usersWithSoldProductsDtos = userRepository.findAllUsersAndSoldProducts()
                 .stream()
                 .map(user -> modelMapper.map(user, UserDto.class))

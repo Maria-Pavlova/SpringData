@@ -13,9 +13,9 @@ import java.util.List;
 public class CustomerExportDto implements Serializable {
     private long id;
     private String name;
-    private String birthDate;
+    private LocalDateTime birthDate;
     private boolean isYoungDriver;
-    private List<SalesExportDto> sales;
+    private List<SalesDto> sales;
 
 
 }

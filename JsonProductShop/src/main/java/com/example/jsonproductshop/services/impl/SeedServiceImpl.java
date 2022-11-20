@@ -1,9 +1,7 @@
 package com.example.jsonproductshop.services.impl;
 
 import com.example.jsonproductshop.constants.FilePaths;
-import com.example.jsonproductshop.models.dto.importDto.CategorySeedDto;
-import com.example.jsonproductshop.models.dto.importDto.ProductSeedDto;
-import com.example.jsonproductshop.models.dto.importDto.UserSeedDto;
+import com.example.jsonproductshop.models.dto.importDto.*;
 import com.example.jsonproductshop.models.entities.Category;
 import com.example.jsonproductshop.models.entities.Product;
 import com.example.jsonproductshop.models.entities.User;
@@ -16,6 +14,10 @@ import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -24,8 +26,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.jsonproductshop.constants.FilePaths.PATH_PRODUCTS;
-import static com.example.jsonproductshop.constants.FilePaths.PATH_USERS;
+import static com.example.jsonproductshop.constants.FilePaths.*;
 
 @Service
 public class SeedServiceImpl implements SeedService {
@@ -56,15 +57,13 @@ public class SeedServiceImpl implements SeedService {
     }
 
     @Override
-    public void seedUsers() throws IOException {
+    public void seedUsers() throws IOException, JAXBException {
         UserSeedDto[] userSeedDtos = gson.fromJson(Files.readString(Path.of(PATH_USERS)), UserSeedDto[].class);
         final List<User> users = Arrays.stream(userSeedDtos)
                 .filter(validationUtil::isValid)
                 .map(userSeedDto -> modelMapper.map(userSeedDto, User.class)).toList();
         userService.seedUsers(users);
 
-//        FileReader reader = new FileReader(Path.of(PATH_USERS).toFile());
-//        UserSeedDto[] userSeedDtos = gson.fromJson(reader, UserSeedDto[].class);
 
     }
 

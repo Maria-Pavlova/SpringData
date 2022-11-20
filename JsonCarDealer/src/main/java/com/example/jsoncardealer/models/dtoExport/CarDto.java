@@ -1,4 +1,4 @@
-package com.example.jsoncardealer.models.dtoImport;
+package com.example.jsoncardealer.models.dtoExport;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;

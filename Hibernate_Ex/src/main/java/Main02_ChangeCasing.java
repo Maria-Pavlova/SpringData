@@ -16,15 +16,22 @@ public class Main02_ChangeCasing {
 
         entityManager.getTransaction().begin();
 
-        Query fromTown = entityManager.createQuery(GET_TOWNS, Town.class);
-        List<Town> resultList = fromTown.getResultList();
-        for (Town town : resultList) {
-            String name = town.getName();
-            if (name.length() <= 5){
-                town.setName(name.toUpperCase());
-                entityManager.persist(town);
-            }
-        }
+        Query query = entityManager.createQuery
+                ("UPDATE Town t SET t.name = UPPER(t.name) WHERE length(t.name) <= 5");
+
+        int affectedRows = query.executeUpdate();
+        System.out.println("Affected rows is" + " " + + affectedRows + ".");
+
+//        Query fromTown = entityManager.createQuery(GET_TOWNS, Town.class);
+//        List<Town> resultList = fromTown.getResultList();
+//        for (Town town : resultList) {
+//            String name = town.getName();
+//            if (name.length() <= 5){
+//                town.setName(name.toUpperCase());
+//                entityManager.persist(town);
+//            }
+//        }
+
         entityManager.getTransaction().commit();
         entityManager.close();
     }

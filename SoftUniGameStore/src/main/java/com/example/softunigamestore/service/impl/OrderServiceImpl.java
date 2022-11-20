@@ -28,7 +28,9 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, GameRepository gameRepository, UserService userService, UserRepository userRepository, ShoppingCartRepository shoppingCartRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, GameRepository gameRepository,
+                            UserService userService, UserRepository userRepository,
+                            ShoppingCartRepository shoppingCartRepository) {
         this.orderRepository = orderRepository;
         this.gameRepository = gameRepository;
         this.userService = userService;

@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.xml.bind.JAXBContext;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -30,5 +31,6 @@ public class ApplicationBeanConfiguration {
                 .create();
 
     };
+
 
 }

@@ -1,6 +1,5 @@
 package com.example.jsoncardealer.models.dtoExport;
 
-import com.example.jsoncardealer.models.dtoImport.CarDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

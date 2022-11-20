@@ -15,7 +15,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static com.example.jsoncardealer.constants.FilePath.*;
 
 
@@ -59,7 +58,7 @@ public class CarServiceImpl implements CarService {
                 .collect(Collectors.toList());
         String json = gson.toJson(dtos);
         System.out.println(json);
-     //   writeToFile(EXPORT_PATH + CARS_AND_PARTS_FILE, json);
+        writeToFile(EXPORT_PATH + CARS_AND_PARTS_FILE, json);
     }
 
     private void writeToFile(String filePath, String content) throws IOException {
