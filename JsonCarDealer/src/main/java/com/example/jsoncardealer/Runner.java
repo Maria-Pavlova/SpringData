@@ -31,8 +31,8 @@ public class Runner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        seedService.seedAllData();
-        saleService.seedSales();
+//        seedService.seedAllData();
+//        saleService.seedSales();
 
         System.out.println("Enter number of query:");
         int numOfQuery = Integer.parseInt(bufferedReader.readLine());

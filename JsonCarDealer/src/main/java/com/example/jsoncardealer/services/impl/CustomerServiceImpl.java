@@ -42,7 +42,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-
     @Override
     public void getOrderedCustomers() throws IOException {
         List<CustomerExportDto> customerExportDtos = customerRepository.findAllByOrderByBirthDateAscIsYoungDriverAsc()
@@ -58,31 +57,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void getCustomersTotalSales() throws IOException {
 
-        List<Customer> customers = customerRepository.findCustomersBySales();
-
-        List<CustomersTotalSalesDto> totalSalesDtos =
-                customers.stream()
-                        .map(customer -> {
-                            CustomersTotalSalesDto dto = modelMapper.map(customer, CustomersTotalSalesDto.class);
-                            dto.setBoughtCars(customer.getSales().size());
-
-                            List<Double> discounts = customer.getSales().stream().map(Sale::getDiscountPercentage).toList();
-                            List<Car> cars = customer.getSales().stream().map(Sale::getCar).toList();
-                            double totalPrice = 0;
-                            double spentMoney = 0;
-                            for (Car car : cars) {
-                                double priceOfCar = car.getParts().stream().map(Part::getPrice)
-                                        .mapToDouble(BigDecimal::doubleValue).sum();
-                                totalPrice += priceOfCar;
-                                spentMoney = totalPrice - (totalPrice * discounts.get(0) * 0.01);
-                            }
-                            dto.setSpentMoney(BigDecimal.valueOf(spentMoney));
-                            return dto;
-                        })
-                        .sorted(Comparator.comparing(CustomersTotalSalesDto::getSpentMoney).reversed())
-                        .collect(Collectors.toList());
-
-        String json = gson.toJson(totalSalesDtos);
+        List<CustomersTotalSalesDto> customersBySales = customerRepository.findCustomersBySales();
+        String json = gson.toJson(customersBySales);
         System.out.println(json);
         writeToFile(EXPORT_PATH + CUSTOMERS_TOTAL_SALES_FILE, json);
     }

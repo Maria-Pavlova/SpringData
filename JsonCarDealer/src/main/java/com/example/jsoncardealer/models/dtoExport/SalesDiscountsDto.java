@@ -1,6 +1,7 @@
 package com.example.jsoncardealer.models.dtoExport;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class SalesDiscountsDto implements Serializable {
     private CarDto car;
     private String customerName;

@@ -15,11 +15,10 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findAllByOrderByBirthDateAscIsYoungDriverAsc();
 
 
-//    @Query("SELECT new com.example.jsoncardealer.models.dtoExport.CustomersTotalSalesDto( c.name, s.size, sum(p.price))" +
-//            " FROM Customer c JOIN c.sales s JOIN Part p " +
-//            "WHERE count(c.sales) > 0 GROUP BY c ORDER BY count (c.sales) desc")
-
-    @Query("SELECT c FROM Customer c WHERE c.sales.size > 0 GROUP BY c")
-    List<Customer> findCustomersBySales();
+    @Query("SELECT new com.example.jsoncardealer.models.dtoExport.CustomersTotalSalesDto" +
+            "(c.name, count(s), sum(p.price*(1.0-s.discountPercentage/100))) " +
+            "FROM Customer c JOIN c.sales s JOIN s.car car JOIN car.parts p " +
+            "GROUP BY c " +
+            "ORDER BY sum(p.price*(1-s.discountPercentage/100)) desc, count(s) desc")
+    List<CustomersTotalSalesDto> findCustomersBySales();
 }
-//
